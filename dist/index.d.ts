@@ -50,6 +50,17 @@ declare type UrlProps = {
     skip?: number;
     sort?: string;
 };
+declare type FilterFactory = {
+    endsWith: (string: string) => string;
+    includes: (string: string) => string;
+    is: (value: boolean | number | string) => string;
+    isGreaterThan: (number: number) => string;
+    isGreaterThanOrEqualTo: (number: number) => string;
+    isLessThan: (number: number) => string;
+    isLessThanOrEqualTo: (number: number) => string;
+    startsWith: (string: string) => string;
+};
+export declare const valueOf: (key: string) => FilterFactory;
 export declare const uuidv4: () => string;
 export declare class Jsonbox {
     apiKey: string | undefined;
@@ -60,6 +71,7 @@ export declare class Jsonbox {
     create: <T extends JsonObject | JsonObject[]>(data: T, collection?: string | undefined) => Promise<T & RecordMetadataFixed>;
     delete: Delete;
     read: Read;
+    remove: Delete;
     meta: () => Promise<BoxMetadata>;
     update: <T extends JsonObject>(id: string, data: T) => Promise<{
         message: string;

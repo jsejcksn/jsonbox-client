@@ -102,6 +102,28 @@ const isValidId = (
   }
 };
 
+type FilterFactory = {
+  endsWith: (string: string) => string;
+  includes: (string: string) => string;
+  is: (value: boolean | number | string) => string;
+  isGreaterThan: (number: number) => string;
+  isGreaterThanOrEqualTo: (number: number) => string;
+  isLessThan: (number: number) => string;
+  isLessThanOrEqualTo: (number: number) => string;
+  startsWith: (string: string) => string;
+};
+
+export const valueOf = (key: string): FilterFactory => ({
+  endsWith: (string: string): string => `${key}:*${string}`,
+  includes: (string: string): string => `${key}:*${string}*`,
+  is: (value: boolean | number | string): string => `${key}:${typeof value === 'number' ? '=' : ''}${value}`,
+  isGreaterThan: (number: number): string => `${key}:>${number}`,
+  isGreaterThanOrEqualTo: (number: number): string => `${key}:>=${number}`,
+  isLessThan: (number: number): string => `${key}:<${number}`,
+  isLessThanOrEqualTo: (number: number): string => `${key}:<=${number}`,
+  startsWith: (string: string): string => `${key}:${string}*`,
+});
+
 export const uuidv4 = (): string => {
   // Inspiration:
   // https://gist.github.com/jed/982883
@@ -193,6 +215,8 @@ export class Jsonbox {
     return response.json() as Promise<T & RecordMetadataFixed>;
   };
 
+  // TODO:
+  // - For "filter": support array
   delete = (async (parameter: DeleteParameter) => {
     const options: RequestInit = {method: 'DELETE'};
     if (this.apiKey !== undefined) options.headers = {'x-api-key': this.apiKey}; // eslint-disable-line no-invalid-this
@@ -221,7 +245,10 @@ export class Jsonbox {
     return response.json() as Promise<{message: string}>;
   }) as Delete;
 
-  // TODO: Re-examine; fix type generics (especially the second call signature)
+  // TODO:
+  // - Re-examine
+  // - Fix type generics (especially the second call signature)
+  // - For "filter": support array
   // read = (async <T extends JsonObject = any> (parameter: ReadParameter) => { // eslint-disable-line @typescript-eslint/no-explicit-any, max-len
   read = (async (parameter: ReadParameter) => { // eslint-disable-line @typescript-eslint/no-explicit-any, max-len
     const options: RequestInit = {method: 'GET'};
@@ -236,6 +263,8 @@ export class Jsonbox {
     if (!response.ok) return handleUnexpectedResponse(response);
     return response.json();
   }) as Read;
+
+  remove = this.delete; // eslint-disable-line no-invalid-this
 
   meta = async (): Promise<BoxMetadata> => {
     const options: RequestInit = {method: 'GET'};
