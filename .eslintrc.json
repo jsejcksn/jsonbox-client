@@ -8,7 +8,7 @@
   "overrides": [
     {
       "files": [
-        "src/index.js.ts"
+        "src/index.ts"
       ],
       "env": {
         "browser": true
