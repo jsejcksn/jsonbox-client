@@ -1,0 +1,32 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "@jsejcksn"
+  ],
+  "overrides": [
+    {
+      "files": [
+        "src/index.js.ts"
+      ],
+      "env": {
+        "browser": true
+      }
+    },
+    {
+      "files": [
+        "src/index.cjs.ts",
+        "src/index.mjs.ts"
+      ],
+      "env": {
+        "node": true
+      }
+    }
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "root": true
+}
