@@ -50,6 +50,7 @@ declare type UrlProps = {
     skip?: number;
     sort?: string;
 };
+export declare const createApiKey: () => string;
 declare type FilterFactory = {
     endsWith: (string: string) => string;
     includes: (string: string) => string;
@@ -61,7 +62,6 @@ declare type FilterFactory = {
     startsWith: (string: string) => string;
 };
 export declare const valueOf: (key: string) => FilterFactory;
-export declare const uuidv4: () => string;
 export declare class Jsonbox {
     apiKey: string | undefined;
     id: string;
