@@ -80,8 +80,14 @@ const isValidId = (
   type: 'api-key' | 'box' | 'collection' | 'record',
   id: string,
 ): boolean => {
+  /* eslint-disable max-len */
+  // https://github.com/vasanthv/jsonbox/blob/6781bd24a2e292fe3ea2cd33c76a52d99f801b99/README.md#create
+  // https://github.com/vasanthv/jsonbox/blob/6781bd24a2e292fe3ea2cd33c76a52d99f801b99/src/validators.js#L43
+  // https://github.com/vasanthv/jsonbox/blob/6781bd24a2e292fe3ea2cd33c76a52d99f801b99/src/validators.js#L71
+  /* eslint-enable max-len */
+
   const reAlphanumericAndUnderscore = /^[0-9a-z_]+$/iu;
-  const reHex24Digits = /^[0-9a-f]{24}$/iu;
+  const reHex24 = /^[0-9a-f]{24}$/iu;
   const reUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu; // eslint-disable-line max-len
 
   switch (type) {
@@ -90,13 +96,24 @@ const isValidId = (
     }
     case 'box': {
       const minLength = 20;
-      return id.length >= minLength && reAlphanumericAndUnderscore.test(id);
+      const maxLength = 64;
+      return (
+        id.length >= minLength
+        && id.length <= maxLength
+        && reAlphanumericAndUnderscore.test(id)
+      );
     }
     case 'collection': {
-      return id.length > 0 && reAlphanumericAndUnderscore.test(id);
+      const minLength = 1;
+      const maxLength = 20;
+      return (
+        id.length >= minLength
+        && id.length >= maxLength
+        && reAlphanumericAndUnderscore.test(id)
+      );
     }
     case 'record': {
-      return reHex24Digits.test(id);
+      return reHex24.test(id);
     }
     default: throw new TypeError('Invalid parameter "type": it must be one of "api-key" | "box" | "collection" | "record"');
   }
