@@ -172,15 +172,11 @@ export class Jsonbox {
     apiKey,
     origin = 'https://jsonbox.io',
   }: InstanceOptions = {} as InstanceOptions) {
-    if (!isValidId('box', id)) {
-      throw new TypeError('Invalid parmater "id": Box ID must consist of at least 20 characters including alphanumeric and "_"');
-    }
+    if (!isValidId('box', id)) throw new TypeError('Invalid parmater "id": Box ID must consist of at least 20 characters including alphanumeric and "_"');
     if (
       typeof apiKey === 'string'
       && !isValidId('api-key', apiKey)
-    ) {
-      throw new TypeError('Invalid parameter "apiKey": API key must be a valid UUID');
-    }
+    ) throw new TypeError('Invalid parameter "apiKey": API key must be a valid UUID');
 
     this.apiKey = apiKey;
     this.id = id;
@@ -198,9 +194,7 @@ export class Jsonbox {
     if (
       typeof id === 'string'
       && typeof collection === 'string'
-    ) {
-      throw new TypeError('Cannot use both properties "id" and "collection"');
-    }
+    ) throw new TypeError('Cannot use both properties "id" and "collection"');
 
     const url = new URL(`${this.origin}/${this.id}`); // eslint-disable-line no-invalid-this
 
