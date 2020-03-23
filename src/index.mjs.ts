@@ -59,6 +59,26 @@ type UrlProps = {
   sort?: string;
 };
 
+export const createApiKey = (): string => {
+  // Generates RFC 4122-compliant UUIDv4
+  // References:
+  // https://gist.github.com/jed/982883
+  // https://github.com/uuidjs/uuid/blob/master/src/v4.js
+  /* eslint-disable no-magic-numbers */
+  const hex = [...Array(256).keys()]
+    .map(index => (index).toString(16).padStart(2, '0'));
+
+  const r = fillRandomValues(new Uint8Array(16));
+
+  r[6] = (r[6] & 0x0f) | 0x40;
+  r[8] = (r[8] & 0x3f) | 0x80;
+
+  return [...r.entries()]
+    .map(([index, int]) => ([4, 6, 8, 10].includes(index) ? `-${hex[int]}` : hex[int]))
+    .join('');
+  /* eslint-enable no-magic-numbers */
+};
+
 type ErrorProps = {[key: string]: any}; // eslint-disable-line @typescript-eslint/no-explicit-any, max-len
 
 const createError = (
@@ -81,8 +101,14 @@ const isValidId = (
   type: 'api-key' | 'box' | 'collection' | 'record',
   id: string,
 ): boolean => {
+  /* eslint-disable max-len */
+  // https://github.com/vasanthv/jsonbox/blob/6781bd24a2e292fe3ea2cd33c76a52d99f801b99/README.md#create
+  // https://github.com/vasanthv/jsonbox/blob/6781bd24a2e292fe3ea2cd33c76a52d99f801b99/src/validators.js#L43
+  // https://github.com/vasanthv/jsonbox/blob/6781bd24a2e292fe3ea2cd33c76a52d99f801b99/src/validators.js#L71
+  /* eslint-enable max-len */
+
   const reAlphanumericAndUnderscore = /^[0-9a-z_]+$/iu;
-  const reHex24Digits = /^[0-9a-f]{24}$/iu;
+  const reHex24 = /^[0-9a-f]{24}$/iu;
   const reUuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu; // eslint-disable-line max-len
 
   switch (type) {
@@ -91,13 +117,24 @@ const isValidId = (
     }
     case 'box': {
       const minLength = 20;
-      return id.length >= minLength && reAlphanumericAndUnderscore.test(id);
+      const maxLength = 64;
+      return (
+        id.length >= minLength
+        && id.length <= maxLength
+        && reAlphanumericAndUnderscore.test(id)
+      );
     }
     case 'collection': {
-      return id.length > 0 && reAlphanumericAndUnderscore.test(id);
+      const minLength = 1;
+      const maxLength = 20;
+      return (
+        id.length >= minLength
+        && id.length >= maxLength
+        && reAlphanumericAndUnderscore.test(id)
+      );
     }
     case 'record': {
-      return reHex24Digits.test(id);
+      return reHex24.test(id);
     }
     default: throw new TypeError('Invalid parameter "type": it must be one of "api-key" | "box" | "collection" | "record"');
   }
@@ -125,25 +162,6 @@ export const valueOf = (key: string): FilterFactory => ({
   startsWith: (string: string): string => `${key}:${string}*`,
 });
 
-export const uuidv4 = (): string => {
-  // Inspiration:
-  // https://gist.github.com/jed/982883
-  // https://github.com/uuidjs/uuid/blob/master/src/v4.js
-  /* eslint-disable no-magic-numbers */
-  const hex = [...Array(256).keys()]
-    .map(index => (index).toString(16).padStart(2, '0'));
-
-  const r = fillRandomValues(new Uint8Array(16));
-
-  r[6] = (r[6] & 0x0f) | 0x40;
-  r[8] = (r[8] & 0x3f) | 0x80;
-
-  return [...r.entries()]
-    .map(([index, int]) => ([4, 6, 8, 10].includes(index) ? `-${hex[int]}` : hex[int]))
-    .join('');
-  /* eslint-enable no-magic-numbers */
-};
-
 export class Jsonbox {
   // https://github.com/typescript-eslint/typescript-eslint/issues/977
   /* eslint-disable lines-between-class-members */
@@ -156,15 +174,11 @@ export class Jsonbox {
     apiKey,
     origin = 'https://jsonbox.io',
   }: InstanceOptions = {} as InstanceOptions) {
-    if (!isValidId('box', id)) {
-      throw new TypeError('Invalid parmater "id": Box ID must consist of at least 20 characters including alphanumeric and "_"');
-    }
+    if (!isValidId('box', id)) throw new TypeError('Invalid parmater "id": Box ID must consist of at least 20 characters including alphanumeric and "_"');
     if (
       typeof apiKey === 'string'
       && !isValidId('api-key', apiKey)
-    ) {
-      throw new TypeError('Invalid parameter "apiKey": API key must be a valid UUID');
-    }
+    ) throw new TypeError('Invalid parameter "apiKey": API key must be a valid UUID');
 
     this.apiKey = apiKey;
     this.id = id;
@@ -182,9 +196,7 @@ export class Jsonbox {
     if (
       typeof id === 'string'
       && typeof collection === 'string'
-    ) {
-      throw new TypeError('Cannot use both properties "id" and "collection"');
-    }
+    ) throw new TypeError('Cannot use both properties "id" and "collection"');
 
     const url = new URL(`${this.origin}/${this.id}`); // eslint-disable-line no-invalid-this
 

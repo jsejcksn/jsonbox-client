@@ -58,6 +58,26 @@ type UrlProps = {
   sort?: string;
 };
 
+export const createApiKey = (): string => {
+  // Generates RFC 4122-compliant UUIDv4
+  // References:
+  // https://gist.github.com/jed/982883
+  // https://github.com/uuidjs/uuid/blob/master/src/v4.js
+  /* eslint-disable no-magic-numbers */
+  const hex = [...Array(256).keys()]
+    .map(index => (index).toString(16).padStart(2, '0'));
+
+  const r = fillRandomValues(new Uint8Array(16));
+
+  r[6] = (r[6] & 0x0f) | 0x40;
+  r[8] = (r[8] & 0x3f) | 0x80;
+
+  return [...r.entries()]
+    .map(([index, int]) => ([4, 6, 8, 10].includes(index) ? `-${hex[int]}` : hex[int]))
+    .join('');
+  /* eslint-enable no-magic-numbers */
+};
+
 type ErrorProps = {[key: string]: any}; // eslint-disable-line @typescript-eslint/no-explicit-any, max-len
 
 const createError = (
@@ -140,25 +160,6 @@ export const valueOf = (key: string): FilterFactory => ({
   isLessThanOrEqualTo: (number: number): string => `${key}:<=${number}`,
   startsWith: (string: string): string => `${key}:${string}*`,
 });
-
-export const uuidv4 = (): string => {
-  // Inspiration:
-  // https://gist.github.com/jed/982883
-  // https://github.com/uuidjs/uuid/blob/master/src/v4.js
-  /* eslint-disable no-magic-numbers */
-  const hex = [...Array(256).keys()]
-    .map(index => (index).toString(16).padStart(2, '0'));
-
-  const r = fillRandomValues(new Uint8Array(16));
-
-  r[6] = (r[6] & 0x0f) | 0x40;
-  r[8] = (r[8] & 0x3f) | 0x80;
-
-  return [...r.entries()]
-    .map(([index, int]) => ([4, 6, 8, 10].includes(index) ? `-${hex[int]}` : hex[int]))
-    .join('');
-  /* eslint-enable no-magic-numbers */
-};
 
 export class Jsonbox {
   // https://github.com/typescript-eslint/typescript-eslint/issues/977
