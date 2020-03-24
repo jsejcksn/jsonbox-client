@@ -16,7 +16,7 @@ type JsonboxRecord<T> = T & Metadata;
 
 type JsonPrimitive = boolean | null | number | string;
 type JsonArray = Array<JsonData>;
-type JsonObject = {[key: string]: JsonData};
+type JsonObject = {[key in string]?: JsonData};
 type JsonData = JsonArray | JsonObject | JsonPrimitive;
 
 type Metadata = MetadataConditional & MetadataFixed;
@@ -260,8 +260,8 @@ export class Jsonbox {
     if (!response.ok) return handleUnexpectedResponse(response);
     return response.json();
   }) as {
-    <T extends JsonObject = JsonObject>(id: string): Promise<JsonboxRecord<T>>;
-    <T extends JsonObject = JsonObject>({collection, filter, limit, skip, sort}?: Omit<UrlProps, 'id'>): Promise<JsonboxRecord<T>[]>;
+    <T extends JsonObject = Metadata>(id: string): Promise<JsonboxRecord<T>>;
+    <T extends JsonObject = Metadata>({collection, filter, limit, skip, sort}?: Omit<UrlProps, 'id'>): Promise<JsonboxRecord<T>[]>;
   };
 
   remove = this.delete; // eslint-disable-line no-invalid-this
