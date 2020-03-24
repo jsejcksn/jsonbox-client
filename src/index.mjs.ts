@@ -7,17 +7,6 @@ type BoxMetadata = {
   _updatedOn: string;
 };
 
-type Delete = {
-  (id: string): Promise<{message: string}>;
-  (id: string[]): Promise<{
-    deleted: boolean;
-    id: string;
-  }[]>;
-  ({filter}: {filter: string}): Promise<{message: string}>;
-};
-
-type DeleteParameter = string | string[] | {filter: string};
-
 type InstanceOptions = {
   apiKey?: string;
   origin: string;
@@ -29,13 +18,6 @@ type JsonObject = {[key: string]: JsonData};
 type JsonData = JsonArray | JsonObject | JsonPrimitive;
 
 type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
-
-type Read = {
-  <T extends JsonObject>(id?: string): Promise<Record<T>>;
-  <T extends JsonObject>({collection, filter, limit, skip, sort}?: Omit<UrlProps, 'id'>): Promise<Record<T>[]>;
-};
-
-type ReadParameter = string | Omit<UrlProps, 'id'>;
 
 type Record<T> = T & RecordMetadata;
 type RecordMetadata = RecordMetadataFixed & RecordMetadataConditional;
@@ -232,7 +214,7 @@ export class Jsonbox {
 
   // TODO:
   // - For "filter": support array
-  delete = (async (parameter: DeleteParameter) => {
+  delete = (async (parameter: string | string[] | {filter: string}) => {
     const options: RequestInit = {method: 'DELETE'};
     if (this.apiKey !== undefined) options.headers = {'x-api-key': this.apiKey}; // eslint-disable-line no-invalid-this
 
@@ -257,15 +239,21 @@ export class Jsonbox {
 
     const response = await fetch(this.getUrl(urlProps), options); // eslint-disable-line no-invalid-this, max-len
     if (!response.ok) return handleUnexpectedResponse(response);
-    return response.json() as Promise<{message: string}>;
-  }) as Delete;
+    return response.json();
+  }) as {
+    (id: string): Promise<{message: string}>;
+    (id: string[]): Promise<{
+      deleted: boolean;
+      id: string;
+    }[]>;
+    ({filter}: {filter: string}): Promise<{message: string}>;
+  };
 
   // TODO:
   // - Re-examine
   // - Fix type generics (especially the second call signature)
   // - For "filter": support array
-  // read = (async <T extends JsonObject = any> (parameter: ReadParameter) => { // eslint-disable-line @typescript-eslint/no-explicit-any, max-len
-  read = (async (parameter: ReadParameter) => { // eslint-disable-line @typescript-eslint/no-explicit-any, max-len
+  read = (async (parameter: string | Omit<UrlProps, 'id'>) => { // eslint-disable-line @typescript-eslint/no-explicit-any, max-len
     const options: RequestInit = {method: 'GET'};
     if (this.apiKey !== undefined) options.headers = {'x-api-key': this.apiKey}; // eslint-disable-line no-invalid-this
 
@@ -277,7 +265,10 @@ export class Jsonbox {
     const response = await fetch(this.getUrl(urlProps), options); // eslint-disable-line no-invalid-this, max-len
     if (!response.ok) return handleUnexpectedResponse(response);
     return response.json();
-  }) as Read;
+  }) as {
+    <T extends JsonObject>(id?: string): Promise<Record<T>>;
+    <T extends JsonObject>({collection, filter, limit, skip, sort}?: Omit<UrlProps, 'id'>): Promise<Record<T>[]>;
+  };
 
   remove = this.delete; // eslint-disable-line no-invalid-this
 
