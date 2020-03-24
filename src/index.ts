@@ -6,7 +6,7 @@ type BoxMetadata = {
   _updatedOn: string;
 };
 
-type InstanceOptions = {
+type BoxOptions = {
   apiKey?: string;
   origin: string;
 };
@@ -155,7 +155,7 @@ export class Jsonbox {
   constructor (id: string, {
     apiKey,
     origin = 'https://jsonbox.io',
-  }: InstanceOptions = {} as InstanceOptions) {
+  }: BoxOptions = {} as BoxOptions) {
     if (!isValidId('box', id)) throw new TypeError('Invalid parmater "id": Box ID must consist of at least 20 characters including alphanumeric and "_"');
     if (
       typeof apiKey === 'string'
