@@ -7,19 +7,19 @@ declare type InstanceOptions = {
     apiKey?: string;
     origin: string;
 };
+declare type JsonboxRecord<T> = T & Metadata;
 declare type JsonPrimitive = boolean | null | number | string;
 declare type JsonArray = Array<JsonData>;
 declare type JsonObject = {
     [key: string]: JsonData;
 };
 declare type JsonData = JsonArray | JsonObject | JsonPrimitive;
-declare type Record<T> = T & RecordMetadata;
-declare type RecordMetadata = RecordMetadataFixed & RecordMetadataConditional;
-declare type RecordMetadataConditional = {
+declare type Metadata = MetadataConditional & MetadataFixed;
+declare type MetadataConditional = {
     _collection?: string;
     _updatedOn?: string;
 };
-declare type RecordMetadataFixed = {
+declare type MetadataFixed = {
     _createdOn: string;
     _id: string;
 };
@@ -50,7 +50,7 @@ export declare class Jsonbox {
     origin: string;
     constructor(id: string, { apiKey, origin, }?: InstanceOptions);
     protected getUrl: ({ collection, filter, id, limit, skip, sort, }?: UrlProps) => string;
-    create: <T extends JsonObject | JsonObject[]>(data: T, collection?: string | undefined) => Promise<T & RecordMetadataFixed>;
+    create: <T extends JsonObject | JsonObject[]>(data: T, collection?: string | undefined) => Promise<T & MetadataFixed>;
     delete: {
         (id: string): Promise<{
             message: string;
@@ -66,8 +66,8 @@ export declare class Jsonbox {
         }>;
     };
     read: {
-        <T extends JsonObject = JsonObject>(id: string): Promise<Record<T>>;
-        <T_1 extends JsonObject = JsonObject>({ collection, filter, limit, skip, sort }?: Pick<UrlProps, "filter" | "collection" | "limit" | "skip" | "sort"> | undefined): Promise<Record<T_1>[]>;
+        <T extends JsonObject = JsonObject>(id: string): Promise<JsonboxRecord<T>>;
+        <T_1 extends JsonObject = JsonObject>({ collection, filter, limit, skip, sort }?: Pick<UrlProps, "filter" | "collection" | "limit" | "skip" | "sort"> | undefined): Promise<JsonboxRecord<T_1>[]>;
     };
     remove: {
         (id: string): Promise<{
