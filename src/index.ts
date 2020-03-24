@@ -72,7 +72,7 @@ export const generateApiKey = (): string => {
 const handleUnexpectedResponse = async (response: Response): Promise<never> => {
   let message: string;
   try {
-    ({message} = await response.json() as {message: string});
+    ({message} = await response.json());
   }
   catch {
     message = `Response not OK (${response.status})`;
@@ -208,11 +208,9 @@ export class Jsonbox {
     if (this.apiKey !== undefined) options.headers['x-api-key'] = this.apiKey; // eslint-disable-line no-invalid-this
     const response = await fetch(this.getUrl({collection}), options); // eslint-disable-line no-invalid-this, max-len
     if (!response.ok) return handleUnexpectedResponse(response);
-    return response.json() as Promise<T & RecordMetadataFixed>;
+    return response.json();
   };
 
-  // TODO:
-  // - For "filter": support array
   delete = (async (parameter: string | string[] | {filter: string}) => {
     const options: RequestInit = {method: 'DELETE'};
     if (this.apiKey !== undefined) options.headers = {'x-api-key': this.apiKey}; // eslint-disable-line no-invalid-this
@@ -222,12 +220,12 @@ export class Jsonbox {
       const promises = ids.map(async id => {
         const response = await fetch(this.getUrl({id}), options); // eslint-disable-line no-invalid-this, max-len
         if (!response.ok) return handleUnexpectedResponse(response);
-        return response.json() as Promise<{message: string}>;
+        return response.json();
       });
       const promiseResults = await Promise.allSettled(promises);
       return promiseResults.map(({status}, index) => ({
-        deleted: status === 'fulfilled',
         id: ids[index],
+        success: status === 'fulfilled',
       }));
     }
 
@@ -242,8 +240,8 @@ export class Jsonbox {
   }) as {
     (id: string): Promise<{message: string}>;
     (id: string[]): Promise<{
-      deleted: boolean;
       id: string;
+      success: boolean;
     }[]>;
     ({filter}: {filter: string}): Promise<{message: string}>;
   };
@@ -251,7 +249,6 @@ export class Jsonbox {
   // TODO:
   // - Re-examine
   // - Fix type generics (especially the second call signature)
-  // - For "filter": support array
   read = (async (parameter: string | Omit<UrlProps, 'id'>) => { // eslint-disable-line @typescript-eslint/no-explicit-any, max-len
     const options: RequestInit = {method: 'GET'};
     if (this.apiKey !== undefined) options.headers = {'x-api-key': this.apiKey}; // eslint-disable-line no-invalid-this
@@ -266,7 +263,7 @@ export class Jsonbox {
     return response.json();
   }) as {
     <T extends JsonObject>(id?: string): Promise<Record<T>>;
-    <T extends JsonObject>({collection, filter, limit, skip, sort}?: Omit<UrlProps, 'id'>): Promise<Record<T>[]>;
+    <T extends JsonObject = JsonObject>({collection, filter, limit, skip, sort}?: Omit<UrlProps, 'id'>): Promise<Record<T>[]>;
   };
 
   remove = this.delete; // eslint-disable-line no-invalid-this
@@ -276,7 +273,7 @@ export class Jsonbox {
     if (this.apiKey !== undefined) options.headers = {'x-api-key': this.apiKey}; // eslint-disable-line no-invalid-this
     const response = await fetch(`${this.origin}/_meta/${this.id}`, options); // eslint-disable-line no-invalid-this
     if (!response.ok) return handleUnexpectedResponse(response);
-    return response.json() as Promise<BoxMetadata>;
+    return response.json();
   };
 
   update = async <T extends JsonObject> (
@@ -292,6 +289,6 @@ export class Jsonbox {
     if (this.apiKey !== undefined) options.headers['x-api-key'] = this.apiKey; // eslint-disable-line no-invalid-this
     const response = await fetch(this.getUrl({id}), options); // eslint-disable-line no-invalid-this, max-len
     if (!response.ok) return handleUnexpectedResponse(response);
-    return response.json() as Promise<{message: string}>;
+    return response.json();
   };
 }
