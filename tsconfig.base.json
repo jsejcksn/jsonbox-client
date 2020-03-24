@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "moduleResolution": "node",
+    "noImplicitReturns": true,
+    "outDir": "dist",
+    "removeComments": true,
+    "strict": true,
+    "target": "esnext",
+  },
+  "exclude": [
+    "node_modules",
+    "dist"
+  ]
+}
