@@ -65,6 +65,8 @@ const createError = (
   props: ErrorProps = {},
 ): Error & ErrorProps => Object.assign(new Error(), {...props, message});
 
+export const combineFilters = (...filters: string[]): string => filters.join(',');
+
 export const generateApiKey = (): string => {
   // Generates RFC 4122-compliant UUIDv4
   // References:
