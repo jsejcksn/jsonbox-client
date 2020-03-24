@@ -3,7 +3,7 @@ declare type BoxMetadata = {
     _createdOn: string;
     _updatedOn: string;
 };
-declare type InstanceOptions = {
+declare type BoxOptions = {
     apiKey?: string;
     origin: string;
 };
@@ -48,7 +48,7 @@ export declare class Jsonbox {
     apiKey: string | undefined;
     id: string;
     origin: string;
-    constructor(id: string, { apiKey, origin, }?: InstanceOptions);
+    constructor(id: string, { apiKey, origin, }?: BoxOptions);
     protected getUrl: ({ collection, filter, id, limit, skip, sort, }?: UrlProps) => string;
     create: <T extends JsonObject | JsonObject[]>(data: T, collection?: string | undefined) => Promise<T & MetadataFixed>;
     delete: {
