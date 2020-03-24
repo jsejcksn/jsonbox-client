@@ -246,9 +246,7 @@ export class Jsonbox {
     ({filter}: {filter: string}): Promise<{message: string}>;
   };
 
-  // TODO:
-  // - Re-examine
-  // - Fix type generics (especially the second call signature)
+  // TODO: Fix type generics (especially the second call signature)
   read = (async (parameter: string | Omit<UrlProps, 'id'>) => { // eslint-disable-line @typescript-eslint/no-explicit-any, max-len
     const options: RequestInit = {method: 'GET'};
     if (this.apiKey !== undefined) options.headers = {'x-api-key': this.apiKey}; // eslint-disable-line no-invalid-this
@@ -262,7 +260,7 @@ export class Jsonbox {
     if (!response.ok) return handleUnexpectedResponse(response);
     return response.json();
   }) as {
-    <T extends JsonObject>(id?: string): Promise<Record<T>>;
+    <T extends JsonObject = JsonObject>(id?: string): Promise<Record<T>>;
     <T extends JsonObject = JsonObject>({collection, filter, limit, skip, sort}?: Omit<UrlProps, 'id'>): Promise<Record<T>[]>;
   };
 
