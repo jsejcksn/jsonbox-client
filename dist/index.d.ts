@@ -50,7 +50,7 @@ declare type UrlProps = {
     skip?: number;
     sort?: string;
 };
-export declare const createApiKey: () => string;
+export declare const generateApiKey: () => string;
 declare type FilterFactory = {
     endsWith: (string: string) => string;
     includes: (string: string) => string;
