@@ -59,7 +59,14 @@ type UrlProps = {
   sort?: string;
 };
 
-export const createApiKey = (): string => {
+type ErrorProps = {[key: string]: any}; // eslint-disable-line @typescript-eslint/no-explicit-any, max-len
+
+const createError = (
+  message: string,
+  props: ErrorProps = {},
+): Error & ErrorProps => Object.assign(new Error(), {...props, message});
+
+export const generateApiKey = (): string => {
   // Generates RFC 4122-compliant UUIDv4
   // References:
   // https://gist.github.com/jed/982883
@@ -78,13 +85,6 @@ export const createApiKey = (): string => {
     .join('');
   /* eslint-enable no-magic-numbers */
 };
-
-type ErrorProps = {[key: string]: any}; // eslint-disable-line @typescript-eslint/no-explicit-any, max-len
-
-const createError = (
-  message: string,
-  props: ErrorProps = {},
-): Error & ErrorProps => Object.assign(new Error(), {...props, message});
 
 const handleUnexpectedResponse = async (response: Response): Promise<never> => {
   let message: string;
