@@ -66,7 +66,7 @@ export declare class Jsonbox {
         }>;
     };
     read: {
-        <T extends JsonObject>(id?: string | undefined): Promise<Record<T>>;
+        <T extends JsonObject = JsonObject>(id?: string | undefined): Promise<Record<T>>;
         <T_1 extends JsonObject = JsonObject>({ collection, filter, limit, skip, sort }?: Pick<UrlProps, "filter" | "collection" | "limit" | "skip" | "sort"> | undefined): Promise<Record<T_1>[]>;
     };
     remove: {
