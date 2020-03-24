@@ -11,22 +11,21 @@ type InstanceOptions = {
   origin: string;
 };
 
+type JsonboxRecord<T> = T & Metadata;
+
 type JsonPrimitive = boolean | null | number | string;
 type JsonArray = Array<JsonData>;
 type JsonObject = {[key: string]: JsonData};
 type JsonData = JsonArray | JsonObject | JsonPrimitive;
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
+type Metadata = MetadataConditional & MetadataFixed;
 
-type Record<T> = T & RecordMetadata;
-type RecordMetadata = RecordMetadataFixed & RecordMetadataConditional;
-
-type RecordMetadataConditional = {
+type MetadataConditional = {
   _collection?: string;
   _updatedOn?: string;
 };
 
-type RecordMetadataFixed = {
+type MetadataFixed = {
   _createdOn: string;
   _id: string;
 };
@@ -198,7 +197,7 @@ export class Jsonbox {
   create = async <T extends JsonObject | JsonObject[]> (
     data: T,
     collection?: string,
-  ): Promise<T & RecordMetadataFixed> => {
+  ): Promise<T & MetadataFixed> => {
     const options: RequestInit & {headers: {[key: string]: string}} = {
       body: JSON.stringify(data),
       headers: {'Content-Type': 'application/json'},
@@ -260,8 +259,8 @@ export class Jsonbox {
     if (!response.ok) return handleUnexpectedResponse(response);
     return response.json();
   }) as {
-    <T extends JsonObject = JsonObject>(id: string): Promise<Record<T>>;
-    <T extends JsonObject = JsonObject>({collection, filter, limit, skip, sort}?: Omit<UrlProps, 'id'>): Promise<Record<T>[]>;
+    <T extends JsonObject = JsonObject>(id: string): Promise<JsonboxRecord<T>>;
+    <T extends JsonObject = JsonObject>({collection, filter, limit, skip, sort}?: Omit<UrlProps, 'id'>): Promise<JsonboxRecord<T>[]>;
   };
 
   remove = this.delete; // eslint-disable-line no-invalid-this
