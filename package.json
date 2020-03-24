@@ -13,7 +13,10 @@
       "require": "./dist/index.cjs"
     }
   },
-  "files": ["./commonjs/*", "./dist/*"],
+  "files": [
+    "./commonjs/*",
+    "./dist/*"
+  ],
   "scripts": {
     "build": "npm run lint && npm run compile",
     "postbuild": "./postbuild.sh && npm run minify",
@@ -46,8 +49,8 @@
   "devDependencies": {
     "@jsejcksn/eslint-config": "^3.1.0",
     "@types/node-fetch": "^2.5.5",
-    "@typescript-eslint/eslint-plugin": "^2.24.0",
-    "@typescript-eslint/parser": "^2.24.0",
+    "@typescript-eslint/eslint-plugin": "^2.25.0",
+    "@typescript-eslint/parser": "^2.25.0",
     "eslint": "^6.8.0",
     "terser": "^4.6.7",
     "typescript": "^3.8.3"
