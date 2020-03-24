@@ -11,7 +11,7 @@ declare type JsonboxRecord<T> = T & Metadata;
 declare type JsonPrimitive = boolean | null | number | string;
 declare type JsonArray = Array<JsonData>;
 declare type JsonObject = {
-    [key: string]: JsonData;
+    [key in string]?: JsonData;
 };
 declare type JsonData = JsonArray | JsonObject | JsonPrimitive;
 declare type Metadata = MetadataConditional & MetadataFixed;
@@ -66,8 +66,8 @@ export declare class Jsonbox {
         }>;
     };
     read: {
-        <T extends JsonObject = JsonObject>(id: string): Promise<JsonboxRecord<T>>;
-        <T_1 extends JsonObject = JsonObject>({ collection, filter, limit, skip, sort }?: Pick<UrlProps, "filter" | "collection" | "limit" | "skip" | "sort"> | undefined): Promise<JsonboxRecord<T_1>[]>;
+        <T extends JsonObject = Metadata>(id: string): Promise<JsonboxRecord<T>>;
+        <T_1 extends JsonObject = Metadata>({ collection, filter, limit, skip, sort }?: Pick<UrlProps, "filter" | "collection" | "limit" | "skip" | "sort"> | undefined): Promise<JsonboxRecord<T_1>[]>;
     };
     remove: {
         (id: string): Promise<{
