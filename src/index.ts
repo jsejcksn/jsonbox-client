@@ -245,7 +245,6 @@ export class Jsonbox {
     ({filter}: {filter: string}): Promise<{message: string}>;
   };
 
-  // TODO: Fix type generics (especially the second call signature)
   read = (async (parameter?: string | Omit<UrlProps, 'id'>) => {
     const options: RequestInit = {method: 'GET'};
     if (this.apiKey !== undefined) options.headers = {'x-api-key': this.apiKey}; // eslint-disable-line no-invalid-this
