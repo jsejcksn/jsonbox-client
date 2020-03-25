@@ -3,6 +3,23 @@
 This is an isomorphic JavaScript module which includes all of the tools you need to help you interact with a [jsonbox](https://github.com/vasanthv/jsonbox) server (like [jsonbox.io](https://jsonbox.io/)). It has first-class TypeScript support.
 
 
+  - [Install](#install)
+  - [Use](#use)
+    - [Import](#import)
+      - [`import` (ES modules)](#import-es-modules)
+      - [`require` (CommonJS)](#require-commonjs)
+    - [Imports](#imports)
+      - [`Jsonbox`](#jsonbox)
+        - [`create`](#create)
+        - [`update`](#update)
+        - [`read`](#read)
+        - [`remove` / `delete`](#remove--delete)
+        - [`meta`](#meta)
+      - [`combineFilters` and `valueOf`](#combinefilters-and-valueof)
+        - [`valueOf` methods](#valueof-methods)
+      - [`generateApiKey`](#generateapikey)
+
+
 ## Install
 
 ```sh
@@ -42,7 +59,7 @@ Specifier examples:
   - Browser (CDN): `https://unpkg.com/jsonbox-client`
   - Node: `jsonbox-client`
 
-#### `require` (Node.js)
+#### `require` (CommonJS)
 
 > Environments: Node.js >=12.x.x using CommonJS modules
 
@@ -96,7 +113,7 @@ jsonbox.apiKey = 'c8ceca96-ebb8-4a2a-9a21-758c12ca6b54';
 jsonbox.origin = 'https://jsonbox.mydomain.com';
 ```
 
-##### Jsonbox methods
+`Jsonbox` methods
 
 These are all async. There is also `jsonbox.delete`, which is the same as `jsonbox.remove`, but can't be destructured because the global `delete` keyword already exists.
 
@@ -443,7 +460,7 @@ const result = await read(readOptions);
 
 Filter records by value(s)
 
-(See [jsonbox#filtering](https://github.com/vasanthv/jsonbox#filtering) for syntax details). For easier filter matching, use the provided imports `combineFilters` and `valueOf`.
+(See [jsonbox#filtering](https://github.com/vasanthv/jsonbox#filtering) for syntax details). For easier filter matching, use the provided imports [`combineFilters` and `valueOf`](#combinefilters-and-valueof).
 
 ```ts
 const readOptions = {filter: 'born:=1980,name:*a*'};
