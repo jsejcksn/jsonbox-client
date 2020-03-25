@@ -12,7 +12,7 @@ type BoxOptions = {
   origin: string;
 };
 
-type JsonboxRecord<T> = T & Metadata;
+export type JsonboxRecord<T> = T & Metadata;
 
 type JsonPrimitive = boolean | null | number | string;
 type JsonArray = Array<JsonData>;
