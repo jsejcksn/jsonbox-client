@@ -650,12 +650,3 @@ import {generateApiKey} from 'jsonbox-client';
 
 generateApiKey(): // random UUID in the format 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
 ```
-
-```ts
-```
-
-```ts
-```
-
-```ts
-```
