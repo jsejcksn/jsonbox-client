@@ -98,15 +98,16 @@ new Jsonbox(boxId: string, {apiKey?: string, origin?: string}); // -> Jsonbox cl
 
 **Examples**
 
-```ts
-// at minimum, you must provide a boxId
+At minimum, you must provide a boxId:
 
+```ts
 const boxId = 'box_2c846c501950dab86062';
 const jsonbox = new Jsonbox(boxId);
 ```
-```ts
-// you can also provide some options
 
+You can also provide some options:
+
+```ts
 const boxOptions = {
   apiKey: 'b8ceca96-ebb8-4a2a-9a21-758c12ca6b54', // only used with protected boxes
   origin: 'https://jsonbox.io', // this is the default, but you could also connect to a different jsonbox server
@@ -114,9 +115,10 @@ const boxOptions = {
 
 const jsonbox = new Jsonbox(boxId, boxOptions);
 ```
-```ts
-// you can also change the values later
 
+You can also change the values later:
+
+```ts
 jsonbox.id = 'a_different_box_id';
 jsonbox.apiKey = 'c8ceca96-ebb8-4a2a-9a21-758c12ca6b54';
 jsonbox.origin = 'https://jsonbox.mydomain.com';
@@ -689,16 +691,17 @@ valueOf(key: string).startsWith(value: string);
 
 **Examples**
 
-```ts
-// single filter
+Single filter:
 
+```ts
 const filter = valueOf('house').is('Gryffindor');
 
 filter === 'house:Gryffindor'; // -> true
 ```
-```ts
-// multiple filters
 
+Combine multiple filters:
+
+```ts
 const filter = combineFilters(
   valueOf('house').endsWith('in'),
   valueOf('name').includes('a'),
