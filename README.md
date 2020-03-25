@@ -16,7 +16,6 @@ This is an isomorphic JavaScript module which includes all of the tools you need
         - [`remove` / `delete`](#remove--delete)
         - [`meta`](#meta)
       - [`combineFilters` and `valueOf`](#combinefilters-and-valueof)
-        - [`valueOf` methods](#valueof-methods)
       - [`generateApiKey`](#generateapikey)
 
 
@@ -89,6 +88,16 @@ This is the main import. It helps you to send and receive data from your jsonbox
 import {Jsonbox} from 'jsonbox-client';
 ```
 
+**Signatures**
+
+```ts
+new Jsonbox(boxId: string); // -> Jsonbox class instance
+
+new Jsonbox(boxId: string, {apiKey?: string, origin?: string}); // -> Jsonbox class instance
+```
+
+**Examples**
+
 ```ts
 // at minimum, you must provide a boxId
 
@@ -113,6 +122,8 @@ jsonbox.apiKey = 'c8ceca96-ebb8-4a2a-9a21-758c12ca6b54';
 jsonbox.origin = 'https://jsonbox.mydomain.com';
 ```
 
+> The `apiKey` must be a valid UUID. To generate one, use the [`generateApiKey` import](#generateapikey).
+
 `Jsonbox` methods
 
 These are all async. There is also `jsonbox.delete`, which is the same as `jsonbox.remove`, but can't be destructured because the global `delete` keyword already exists.
@@ -129,7 +140,17 @@ Create one or more records (objects) in a jsonbox (an array of objects)
 const {create} = jsonbox;
 ```
 
-Create a single record
+**Signatures**
+
+```ts
+create(record: object, collection?: string); // -> Promise resolving the record with metadata
+
+create(records: object[], collection?: string); // -> Promise resolving the array of records with metadata
+```
+
+**Examples**
+
+Create a single record:
 
 ```ts
 const person = {name: 'Jacob'};
@@ -145,7 +166,7 @@ const result = await create(person);
 }
 ```
 
-Create a single record in a collection
+Create a single record in a collection:
 
 ```ts
 const wizard = {name: 'Harry', house: 'Gryffindor', born: 1980};
@@ -164,7 +185,7 @@ const result = await create(wizard, collection);
 }
 ```
 
-Create multiple records at once in a collection
+Create multiple records at once in a collection:
 
 ```ts
 const wizards = [
@@ -209,7 +230,17 @@ Update a record
 
 ```ts
 const {update} = jsonbox;
+```
 
+**Signatures**
+
+```ts
+update(id: string, record: object); // -> Promise resolving an object with a status message
+```
+
+**Examples**
+
+```ts
 const id = '5e7ac69799ed160017dc2c85';
 const updatedWizard = {name: 'Cedric', house: 'Hufflepuff', born: 1977, died: 1995};
 const result = await update(id, updatedWizard);
@@ -228,7 +259,19 @@ Read one or more records
 const {read} = jsonbox;
 ```
 
-Read a single record by its ID
+**Signatures**
+
+```ts
+read(id: string); // -> Promise resolving a record with metadata
+
+read(); // -> Promise resolving an array of records with metadata
+
+read({collection?: string, filter?: string, limit?: number, skip?: number, sort?: string}); // -> Promise resolving an array of records with metadata
+```
+
+**Examples**
+
+Read a single record by its ID:
 
 ```ts
 const id = '5e7ac69799ed160017dc2c83';
@@ -247,7 +290,7 @@ const result = await read(id);
 }
 ```
 
-Read all records
+Read all records:
 
 ```ts
 const result = await read();
@@ -298,7 +341,7 @@ const result = await read();
 ]
 ```
 
-Read all records in a collection
+Read all records in a collection:
 
 ```ts
 const readOptions = {collection: 'wizards'};
@@ -341,7 +384,7 @@ const result = await read(readOptions);
 ]
 ```
 
-Limited number of records
+Limited number of records:
 
 ```ts
 const readOptions = {limit: 2};
@@ -372,7 +415,7 @@ const result = await read(readOptions);
 ]
 ```
 
-Skip some records
+Skip some records:
 
 ```ts
 const readOptions = {skip: 2};
@@ -406,7 +449,7 @@ const result = await read(readOptions);
 ]
 ```
 
-Sort records by field
+Sort records by field:
 
 ```ts
 const readOptions = {sort: 'house'};
@@ -458,7 +501,7 @@ const result = await read(readOptions);
 ]
 ```
 
-Filter records by value(s)
+Filter records by value(s):
 
 (See [jsonbox#filtering](https://github.com/vasanthv/jsonbox#filtering) for syntax details). For easier filter matching, use the provided imports [`combineFilters` and `valueOf`](#combinefilters-and-valueof).
 
@@ -489,7 +532,7 @@ const result = await read(readOptions);
 ]
 ```
 
-Combine read options
+Combine read options:
 
 ```ts
 const readOptions = {filter: 'house:Gryffindor', sort: 'name'};
@@ -526,7 +569,19 @@ Delete one or more records
 const {remove} = jsonbox; // also: jsonbox.delete
 ```
 
-Delete a single record by its ID
+**Signatures**
+
+```ts
+remove(id: string); // -> Promise resolving an object with a status message
+
+remove(ids: string[]); // -> Promise resolving an array of objects with properties related to individual delete requests
+
+remove({filter: string}); // -> Promise resolving an object with a status message
+```
+
+**Examples**
+
+Delete a single record by its ID:
 
 ```ts
 const id = '5e7ac69799ed160017dc2c85';
@@ -538,9 +593,9 @@ const result = await remove(id);
 { message: 'Record removed.' }
 ```
 
-Delete multiple records by their IDs
+Delete multiple records by their IDs:
 
-This actually makes multiple concurrent delete requests using `Promise.allSettled` and returns the mapped results in an array.
+This actually makes multiple concurrent delete requests using `Promise.allSettled` and returns the mapped results in an array. This is a unique call which does not `reject` even on network failure. Check the results for the status of the individual delete requests.
 
 ```ts
 const ids = [
@@ -558,7 +613,7 @@ const result = await remove(ids);
 ]
 ```
 
-Delete one or more records using a filter
+Delete one or more records using a filter:
 
 ```ts
 const deleteOptions = {filter: 'house:Gryffindor'};
@@ -576,7 +631,17 @@ Read the metadata for your box
 
 ```ts
 const {meta} = jsonbox;
+```
 
+**Signatures**
+
+```ts
+meta(); // -> Promise resolving an object with the box's metadata
+```
+
+**Examples**
+
+```ts
 const result = await meta();
 ```
 ```js
@@ -596,6 +661,34 @@ These are functions to help you compose filters using natural language instead o
 ```ts
 import {combineFilters, valueOf} from 'jsonbox-client';
 ```
+
+**Signatures**
+
+```ts
+combineFilters(...filters: string[]); // -> A combined, jsonbox-formatted filter string
+```
+```ts
+// All of these return a jsonbox-formatted filter string
+
+valueOf(key: string).endsWith(value: string);
+
+valueOf(key: string).includes(value: string);
+
+valueOf(key: string).is(value: boolean | number | string);
+
+valueOf(key: string).isGreaterThan(value: number);
+
+valueOf(key: string).isGreaterThanOrEqualTo(value: number);
+
+valueOf(key: string).isLessThan(value: number);
+
+valueOf(key: string).isLessThanOrEqualTo(value: number);
+
+valueOf(key: string).startsWith(value: string);
+```
+
+**Examples**
+
 ```ts
 // single filter
 
@@ -630,23 +723,25 @@ const results = await read(readOptions);
 ]
 ```
 
-##### `valueOf` methods:
-
-  - `endsWith`: string
-  - `includes`: string
-  - `is`: boolean | number | string
-  - `isGreaterThan`: number
-  - `isGreaterThanOrEqualTo`: number
-  - `isLessThan`: number
-  - `isLessThanOrEqualTo`: number
-  - `startsWith`: string
-
 #### `generateApiKey`
 
 When using an API key, jsonbox requires it to be a valid UUID. This function generates a randomized, RFC 4122-compliant version-4 UUID.
 
 ```ts
 import {generateApiKey} from 'jsonbox-client';
+```
 
-generateApiKey(): // random UUID in the format 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+**Signatures**
+
+```ts
+generateApiKey(); // -> random UUID in the format 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
+```
+
+**Examples**
+
+```ts
+generateApiKey():
+```
+```js
+'fef67c1a-845a-4b7b-8a86-f6d70faadfd0'
 ```
