@@ -181,7 +181,8 @@ export class Jsonbox {
       && typeof collection === 'string'
     ) throw new TypeError('Cannot use both properties "id" and "collection"');
 
-    const url = new URL(`${this.origin}/${this.id}`); // eslint-disable-line no-invalid-this
+    const url = new URL(this.origin); // eslint-disable-line no-invalid-this
+    url.pathname = `/${this.id}`; // eslint-disable-line no-invalid-this
 
     if (typeof id === 'string') url.pathname += `/${id}`;
     else if (typeof collection === 'string') url.pathname += `/${collection}`;
