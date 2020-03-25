@@ -594,7 +594,7 @@ const result = await meta();
 These are functions to help you compose filters using natural language instead of having to remember the [jsonbox-specific syntax](https://github.com/vasanthv/jsonbox#filtering).
 
 ```ts
-import {combineFilters, valueOf} from 'jsonbox-client`;
+import {combineFilters, valueOf} from 'jsonbox-client';
 ```
 ```ts
 // single filter
