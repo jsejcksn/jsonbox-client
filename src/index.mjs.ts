@@ -3,8 +3,8 @@ import {randomFillSync as fillRandomValues} from 'crypto';
 
 type BoxMetadata = {
   _count: number;
-  _createdOn: string;
-  _updatedOn: string;
+  _createdOn?: string;
+  _updatedOn?: string;
 };
 
 type BoxOptions = {

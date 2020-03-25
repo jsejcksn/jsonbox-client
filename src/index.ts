@@ -2,8 +2,8 @@ const fillRandomValues = window.crypto.getRandomValues.bind(crypto);
 
 type BoxMetadata = {
   _count: number;
-  _createdOn: string;
-  _updatedOn: string;
+  _createdOn?: string;
+  _updatedOn?: string;
 };
 
 type BoxOptions = {
