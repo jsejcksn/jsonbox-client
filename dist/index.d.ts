@@ -7,7 +7,7 @@ declare type BoxOptions = {
     apiKey?: string;
     origin: string;
 };
-declare type JsonboxRecord<T> = T & Metadata;
+export declare type JsonboxRecord<T> = T & Metadata;
 declare type JsonPrimitive = boolean | null | number | string;
 declare type JsonArray = Array<JsonData>;
 declare type JsonObject = {
