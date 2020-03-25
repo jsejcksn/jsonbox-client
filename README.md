@@ -116,6 +116,8 @@ const boxOptions = {
 const jsonbox = new Jsonbox(boxId, boxOptions);
 ```
 
+> If provided, the `apiKey` must be a valid UUID. To generate one, use the [`generateApiKey` import](#generateapikey).
+
 You can also change the values later:
 
 ```ts
@@ -124,11 +126,11 @@ jsonbox.apiKey = 'c8ceca96-ebb8-4a2a-9a21-758c12ca6b54';
 jsonbox.origin = 'https://jsonbox.mydomain.com';
 ```
 
-> The `apiKey` must be a valid UUID. To generate one, use the [`generateApiKey` import](#generateapikey).
-
 `Jsonbox` methods
 
-These are all async. There is also `jsonbox.delete`, which is the same as `jsonbox.remove`, but can't be destructured because the global `delete` keyword already exists.
+> These are all async. In order to reduce boilerplate code in the documentation examples, they don't show the async context, but please take note of the use of `await` keywords.
+>
+> `try`/`catch` is also always good practice when dealing with async code. In the event of bad responses (no network connection / `status.ok === false` / etc.), these methods will `reject` with an error object containing an additional `response` property.
 
 ```ts
 const {create, meta, read, remove, update} = jsonbox;
@@ -566,6 +568,8 @@ const result = await read(readOptions);
 ##### `remove` / `delete`
 
 Delete one or more records
+
+`jsonbox.delete` is the same as `jsonbox.remove`, but can't be destructured because the global `delete` keyword already exists.
 
 ```ts
 const {remove} = jsonbox; // also: jsonbox.delete
