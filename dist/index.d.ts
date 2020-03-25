@@ -1,7 +1,7 @@
 declare type BoxMetadata = {
     _count: number;
-    _createdOn: string;
-    _updatedOn: string;
+    _createdOn?: string;
+    _updatedOn?: string;
 };
 declare type BoxOptions = {
     apiKey?: string;
