@@ -86,7 +86,7 @@ Specifier examples:
 This is the main import. It helps you to send and receive data from your jsonbox server. To get started, pass your configuration options to create a new `Jsonbox` instance:
 
 ```ts
-import {Jsonbox} from 'jsonbox-client`;
+import {Jsonbox} from 'jsonbox-client';
 ```
 
 ```ts
