@@ -98,7 +98,7 @@ new Jsonbox(boxId: string, {apiKey?: string, origin?: string}); // -> Jsonbox cl
 
 **Examples**
 
-At minimum, you must provide a boxId:
+At minimum, you must provide a box ID:
 
 ```ts
 const boxId = 'box_2c846c501950dab86062';
