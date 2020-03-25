@@ -694,7 +694,7 @@ valueOf(key: string).startsWith(value: string);
 
 const filter = valueOf('house').is('Gryffindor');
 
-filter === 'house:Gryffindor'; // true
+filter === 'house:Gryffindor'; // -> true
 ```
 ```ts
 // multiple filters
@@ -705,7 +705,7 @@ const filter = combineFilters(
   valueOf('born').isGreaterThanOrEqualTo(1980),
 );
 
-filter === 'house:*in,name:*a*,born:>=1980'; // true
+filter === 'house:*in,name:*a*,born:>=1980'; // -> true
 
 const readOptions = {filter};
 const results = await read(readOptions);
@@ -740,8 +740,5 @@ generateApiKey(); // -> random UUID in the format 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxx
 **Examples**
 
 ```ts
-generateApiKey():
-```
-```js
-'fef67c1a-845a-4b7b-8a86-f6d70faadfd0'
+generateApiKey(): // -> 'fef67c1a-845a-4b7b-8a86-f6d70faadfd0'
 ```
