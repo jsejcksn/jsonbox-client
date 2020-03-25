@@ -32,7 +32,7 @@ npm install jsonbox-client
 
 ### Import
 
-> Your module specifier depeonds on your environment.
+> Your module specifier depends on your environment.
 >
 > If in a Node.js module: a bare specifier works.
 >
