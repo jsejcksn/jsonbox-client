@@ -159,7 +159,7 @@ export class Jsonbox {
     apiKey,
     origin = 'https://jsonbox.io',
   }: BoxOptions = {} as BoxOptions) {
-    if (!isValidId('box', id)) throw new TypeError('Invalid parmater "id": Box ID must consist of at least 20 characters including alphanumeric and "_"');
+    if (!isValidId('box', id)) throw new TypeError('Invalid parmater "id": Box ID must consist of at least 20 and not more than 64 characters including alphanumeric and "_"');
     if (
       typeof apiKey === 'string'
       && !isValidId('api-key', apiKey)
