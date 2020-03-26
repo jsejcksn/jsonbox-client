@@ -13,7 +13,7 @@ This is an isomorphic JavaScript module which includes all of the tools you need
         - [`create`](#create)
         - [`update`](#update)
         - [`read`](#read)
-        - [`remove` / `delete`](#remove--delete)
+        - [`delete` / `remove`](#delete--remove)
         - [`meta`](#meta)
       - [`combineFilters` and `valueOf`](#combinefilters-and-valueof)
       - [`generateApiKey`](#generateapikey)
@@ -567,14 +567,14 @@ const result = await read(readOptions);
 ]
 ```
 
-##### `remove` / `delete`
+##### `delete` / `remove`
 
 Delete one or more records
 
-`jsonbox.delete` is the same as `jsonbox.remove`, but can't be destructured because the global `delete` keyword already exists.
+`jsonbox.delete` and `jsonbox.remove` are the same method. `jsonbox.remove` is offered because the [`delete`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/delete) operator already exists in the global scope.
 
 ```ts
-const {remove} = jsonbox; // also: jsonbox.delete
+const {remove} = jsonbox;
 ```
 
 **Signatures**
@@ -717,9 +717,11 @@ const filter = combineFilters(
 filter === 'house:*in,name:*a*,born:>=1980'; // -> true
 
 const readOptions = {filter};
-const results = await read(readOptions);
+const result = await read(readOptions);
 ```
 ```js
+// result
+
 [
   {
     _id: '5e7ac69799ed160017dc2c84',
@@ -749,5 +751,10 @@ generateApiKey(); // -> random UUID in the format 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxx
 **Examples**
 
 ```ts
-generateApiKey(): // -> 'fef67c1a-845a-4b7b-8a86-f6d70faadfd0'
+const apiKey = generateApiKey():
+```
+```js
+// apiKey
+
+'fef67c1a-845a-4b7b-8a86-f6d70faadfd0'
 ```
