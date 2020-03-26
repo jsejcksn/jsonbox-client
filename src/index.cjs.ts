@@ -124,6 +124,8 @@ const isValidId = (
   }
 };
 
+const isValidResponse = (response: Response): boolean => response.ok;
+
 type FilterFactory = {
   endsWith: (string: string) => string;
   includes: (string: string) => string;
@@ -209,7 +211,7 @@ export class Jsonbox {
 
     if (this.apiKey !== undefined) options.headers['x-api-key'] = this.apiKey; // eslint-disable-line no-invalid-this
     const response = await fetch(this.getUrl({collection}), options); // eslint-disable-line no-invalid-this, max-len
-    if (!response.ok) return handleUnexpectedResponse(response);
+    if (!isValidResponse(response)) return handleUnexpectedResponse(response);
     return response.json();
   };
 
@@ -221,7 +223,9 @@ export class Jsonbox {
       const ids = parameter;
       const promises = ids.map(async id => {
         const response = await fetch(this.getUrl({id}), options); // eslint-disable-line no-invalid-this, max-len
-        if (!response.ok) return handleUnexpectedResponse(response);
+        if (!isValidResponse(response)) {
+          return handleUnexpectedResponse(response);
+        }
         return response.json();
       });
       const promiseResults = await Promise.allSettled(promises);
@@ -237,7 +241,7 @@ export class Jsonbox {
     else if (typeof parameter === 'object') urlProps.filter = parameter.filter;
 
     const response = await fetch(this.getUrl(urlProps), options); // eslint-disable-line no-invalid-this, max-len
-    if (!response.ok) return handleUnexpectedResponse(response);
+    if (!isValidResponse(response)) return handleUnexpectedResponse(response);
     return response.json();
   }) as {
     (id: string): Promise<{message: string}>;
@@ -258,7 +262,7 @@ export class Jsonbox {
     else if (typeof parameter === 'object') urlProps = parameter;
 
     const response = await fetch(this.getUrl(urlProps), options); // eslint-disable-line no-invalid-this, max-len
-    if (!response.ok) return handleUnexpectedResponse(response);
+    if (!isValidResponse(response)) return handleUnexpectedResponse(response);
     return response.json();
   }) as {
     <T extends JsonObject = Metadata>(id: string): Promise<JsonboxRecord<T>>;
@@ -271,7 +275,7 @@ export class Jsonbox {
     const options: RequestInit = {method: 'GET'};
     if (this.apiKey !== undefined) options.headers = {'x-api-key': this.apiKey}; // eslint-disable-line no-invalid-this
     const response = await fetch(`${this.origin}/_meta/${this.id}`, options); // eslint-disable-line no-invalid-this
-    if (!response.ok) return handleUnexpectedResponse(response);
+    if (!isValidResponse(response)) return handleUnexpectedResponse(response);
     return response.json();
   };
 
@@ -287,7 +291,7 @@ export class Jsonbox {
 
     if (this.apiKey !== undefined) options.headers['x-api-key'] = this.apiKey; // eslint-disable-line no-invalid-this
     const response = await fetch(this.getUrl({id}), options); // eslint-disable-line no-invalid-this, max-len
-    if (!response.ok) return handleUnexpectedResponse(response);
+    if (!isValidResponse(response)) return handleUnexpectedResponse(response);
     return response.json();
   };
 }
