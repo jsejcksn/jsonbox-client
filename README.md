@@ -118,16 +118,6 @@ const jsonbox = new Jsonbox(boxId, boxOptions);
 
 > If provided, the `apiKey` must be a valid UUID. To generate one, use the [`generateApiKey` import](#generateapikey).
 
-You can also change the values later:
-
-> When directly re-assigning the values this way, they won't be validated during assignment—so be sure they are correctly formatted if you do this.
-
-```ts
-jsonbox.id = 'a_different_box_id';
-jsonbox.apiKey = 'c8ceca96-ebb8-4a2a-9a21-758c12ca6b54';
-jsonbox.origin = 'https://jsonbox.mydomain.com';
-```
-
 `Jsonbox` methods
 
 > These are all async. In order to reduce boilerplate code in the documentation examples, they don't show the async context, but please take note of the use of `await` keywords.
