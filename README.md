@@ -132,7 +132,7 @@ jsonbox.origin = 'https://jsonbox.mydomain.com';
 
 > These are all async. In order to reduce boilerplate code in the documentation examples, they don't show the async context, but please take note of the use of `await` keywords.
 >
-> `try`/`catch` is also always good practice when dealing with async code. In the event of bad responses (no network connection / `status.ok === false` / etc.), these methods will `reject` with an error object containing an additional `response` property.
+> In the event of bad responses (no network connection / `status.ok === false` / etc.), these methods will `reject` with an error object containing an additional `response` property. The use of `try`/`catch` is recommended when using these methods in order to handle the possibility of such errors.
 
 ```ts
 const {create, meta, read, remove, update} = jsonbox;
