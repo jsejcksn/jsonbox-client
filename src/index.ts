@@ -70,13 +70,14 @@ export const generateApiKey = (): string => {
 
 const handleUnexpectedResponse = async (response: Response): Promise<never> => {
   let message: string;
+  const responseClone = response.clone();
   try {
     ({message} = await response.json());
   }
   catch {
     message = `Response not OK (${response.status})`;
   }
-  throw createError(message, {name: 'FetchError', response});
+  throw createError(message, {name: 'FetchError', response: responseClone});
 };
 
 const isValidId = (
