@@ -187,8 +187,14 @@ export class Jsonbox {
     const url = new URL(this.origin); // eslint-disable-line no-invalid-this
     url.pathname = `/${this.id}`; // eslint-disable-line no-invalid-this
 
-    if (typeof id === 'string') url.pathname += `/${id}`;
-    else if (typeof collection === 'string') url.pathname += `/${collection}`;
+    if (typeof id === 'string') {
+      if (!isValidId('record', id)) throw new TypeError('Invalid record ID');
+      url.pathname += `/${id}`;
+    }
+    else if (typeof collection === 'string') {
+      if (!isValidId('collection', collection)) throw new TypeError('Invalid collection name: A collection name must consist of at least 1 and not more than 20 characters including alphanumeric and "_"');
+      url.pathname += `/${collection}`;
+    }
 
     const query = {limit, q: filter, skip, sort};
     url.search = [...Object.entries(query)]
