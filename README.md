@@ -31,13 +31,7 @@ npm install jsonbox-client
 
 ### Import
 
-> Your module specifier depends on your environment.
->
-> If in a Node.js module: a bare specifier works.
->
-> If in a browser module: you'll need to use a path to the module file. If you've installed via `npm`, it would be a local path like `./node_modules/jsonbox-client/dist/index.js`. Or maybe you're using a network path to an NPM-aware CDN like `https://unpkg.com/jsonbox-client`.
->
-> Some specifier examples are included below:
+> Your module specifier depends on your environment. Examples are included below.
 
 #### `import` (ES modules)
 
@@ -49,13 +43,13 @@ import {
   combineFilters,
   generateApiKey,
   valueOf,
-} from 'YOUR_SPECIFIER_GOES_HERE';
+} from 'MODULE_SPECIFIER_GOES_HERE';
 ```
 
 Specifier examples:
 
-  - Browser (local): `./node_modules/jsonbox-client/dist/index.js`
-  - Browser (CDN): `https://unpkg.com/jsonbox-client`
+  - Browser (local): `./node_modules/jsonbox-client/dist/index.js` (or another path to where you've placed the module file)
+  - Browser (CDN): `https://unpkg.com/jsonbox-client` (or another URL which resolves the module code)
   - Node: `jsonbox-client`
 
 #### `require` (CommonJS)
@@ -68,13 +62,12 @@ const {
   combineFilters,
   generateApiKey,
   valueOf,
-} = require('YOUR_SPECIFIER_GOES_HERE');
+} = require('MODULE_SPECIFIER_GOES_HERE');
 ```
 
 Specifier examples:
 
   - Node >13.x.x: `jsonbox-client`
-
   - Node 12.x.x: `jsonbox-client/commonjs`
 
 
