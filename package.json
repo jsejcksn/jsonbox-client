@@ -45,7 +45,7 @@
   },
   "homepage": "https://github.com/jsejcksn/jsonbox-client#readme",
   "dependencies": {
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^3.1.1"
   },
   "devDependencies": {
     "@jsejcksn/eslint-config": "^3.1.0",
